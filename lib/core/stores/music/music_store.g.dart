@@ -34,6 +34,40 @@ mixin _$MusicStore on _MusicStore, Store {
   int get songNumber => (_$songNumberComputed ??=
           Computed<int>(() => super.songNumber, name: '_MusicStore.songNumber'))
       .value;
+  Computed<bool>? _$isPlayingComputed;
+
+  @override
+  bool get isPlaying => (_$isPlayingComputed ??=
+          Computed<bool>(() => super.isPlaying, name: '_MusicStore.isPlaying'))
+      .value;
+  Computed<bool>? _$isPausedComputed;
+
+  @override
+  bool get isPaused => (_$isPausedComputed ??=
+          Computed<bool>(() => super.isPaused, name: '_MusicStore.isPaused'))
+      .value;
+  Computed<bool>? _$isStoppedComputed;
+
+  @override
+  bool get isStopped => (_$isStoppedComputed ??=
+          Computed<bool>(() => super.isStopped, name: '_MusicStore.isStopped'))
+      .value;
+
+  late final _$isMutedAtom =
+      Atom(name: '_MusicStore.isMuted', context: context);
+
+  @override
+  bool get isMuted {
+    _$isMutedAtom.reportRead();
+    return super.isMuted;
+  }
+
+  @override
+  set isMuted(bool value) {
+    _$isMutedAtom.reportWrite(value, super.isMuted, () {
+      super.isMuted = value;
+    });
+  }
 
   late final _$_hasPermissionAtom =
       Atom(name: '_MusicStore._hasPermission', context: context);
@@ -116,11 +150,15 @@ mixin _$MusicStore on _MusicStore, Store {
   @override
   String toString() {
     return '''
+isMuted: ${isMuted},
 listSongs: ${listSongs},
 hasPermission: ${hasPermission},
 hasError: ${hasError},
 length: ${length},
-songNumber: ${songNumber}
+songNumber: ${songNumber},
+isPlaying: ${isPlaying},
+isPaused: ${isPaused},
+isStopped: ${isStopped}
     ''';
   }
 }

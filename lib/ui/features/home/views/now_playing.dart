@@ -11,10 +11,10 @@ import '../../../shared/widgets/mp_blur_filter.dart';
 import '../../../shared/widgets/mp_blur_widget.dart';
 import '../widgets/player_widget.dart';
 
-
 class NowPlaying extends StatefulWidget {
   final SongModel song;
   final bool? nowPlayTap;
+
   const NowPlaying(this.song, {this.nowPlayTap});
 
   @override
@@ -22,30 +22,15 @@ class NowPlaying extends StatefulWidget {
 }
 
 class _NowPlayingState extends State<NowPlaying> {
-
   final MusicStore _musicStore = getIt<MusicStore>();
-
-  bool isMuted = false;
 
   @override
   initState() {
     super.initState();
-
   }
 
-
-
-  
   @override
   Widget build(BuildContext context) {
-
-
-
-    Future mute(bool muted) async {
-
-    }
-
-
 
     Widget _buildPlayer() => Container(
         padding: const EdgeInsets.all(20.0),
@@ -55,52 +40,54 @@ class _NowPlayingState extends State<NowPlaying> {
               Observer(
                 builder: (context) {
                   return Text(
-                    _musicStore.currentSongTitle?? Strings.unknownMessage,
+                    _musicStore.currentSongTitle ?? Strings.unknownMessage,
                     textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.headline5,
+                    style: Theme.of(context).textTheme.headline4,
+                    maxLines: 2,
                   );
                 },
               ),
               Observer(
                 builder: (context) {
                   return Text(
-                    _musicStore.currentSongTitle?? Strings.unknownMessage,
+                    _musicStore.currentSongTitle ?? Strings.unknownMessage,
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.caption,
                   );
                 },
               ),
-
-
               Padding(
                 padding: const EdgeInsets.only(bottom: 20.0),
               )
             ],
           ),
-
           PlayerWidget(),
-          
           SizedBox(height: 20),
-
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
-              IconButton(
-                  icon: isMuted
-                      ? Icon(
-                    Icons.headset,
-                    color: Theme.of(context).unselectedWidgetColor,
-                  )
-                      : Icon(Icons.headset_off,
-                      color: Theme.of(context).unselectedWidgetColor),
-                  color: Theme.of(context).primaryColor,
-                  onPressed: () {
-                    mute(!isMuted);
-                  }),
+              Observer(
+                builder: (context) {
+                  if (_musicStore.isMuted) {
+                    return IconButton(
+                        icon: Icon(Icons.volume_up, color: Theme.of(context).unselectedWidgetColor,),
+                        color: Theme.of(context).primaryColor,
+                        onPressed: () {
+                          _musicStore.setMute(false);
+                        });
+                  } else {
+                    return IconButton(
+                        icon: Icon(Icons.volume_off, color: Theme.of(context).unselectedWidgetColor),
+                        color: Theme.of(context).primaryColor,
+                        onPressed: () {
+                          _musicStore.setMute(true);
+                        });
+                  }
+                },
+              ),
             ],
           ),
         ]));
-
 
     return Scaffold(
       appBar: AppBar(
@@ -112,13 +99,14 @@ class _NowPlayingState extends State<NowPlaying> {
         child: Stack(
           fit: StackFit.expand,
           children: <Widget>[
-            blurWidget(widget.song,_musicStore),
+            blurWidget(widget.song, _musicStore),
             blurFilter(),
             Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  AlbumUI(widget.song, Duration(minutes: widget.song.duration!), Duration(minutes:10)),
+                  AlbumUI(widget.song, Duration(minutes: widget.song.duration!),
+                      Duration(minutes: 10)),
                   Material(
                     color: Colors.transparent,
                     child: _buildPlayer(),

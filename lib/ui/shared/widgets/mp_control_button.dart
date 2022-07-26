@@ -1,3 +1,4 @@
+import 'package:audio_player/constants/colors.dart';
 import 'package:flutter/material.dart';
 
 class ControlButton extends StatelessWidget {
@@ -12,7 +13,7 @@ class ControlButton extends StatelessWidget {
       onPressed: _onTap,
       iconSize: 30.0,
       icon:  Icon(iconData),
-      color: Theme.of(context).buttonColor,
+      color: Colors.white,
     );
   }
 }

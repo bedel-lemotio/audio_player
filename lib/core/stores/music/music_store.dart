@@ -21,16 +21,16 @@ abstract class _MusicStore with Store {
   // disposers
   List<ReactionDisposer>? _disposers;
 
-  ErrorStore errorStore;
+  final ErrorStore errorStore;
 
   final OnAudioQuery query = OnAudioQuery();
 
-  final AudioPlayer player = AudioPlayer();
+  final AudioPlayer player;
 
 
   // constructor:---------------------------------------------------------------
 
-  _MusicStore({required this.errorStore}) {
+  _MusicStore({required this.errorStore,required this.player}) {
 
     init();
 
@@ -39,6 +39,8 @@ abstract class _MusicStore with Store {
     ];
   }
 
+  @observable
+  bool isMuted = false;
 
   @observable
   bool _hasPermission = false;
@@ -70,11 +72,13 @@ abstract class _MusicStore with Store {
   String? get currentSongTitle => listSongs[currentIndex].title;
   String? get currentSongArtist => listSongs[currentIndex].artist;
 
-
+  @computed
   bool get isPlaying => player == PlayerState.playing;
 
+  @computed
   bool get isPaused => player == PlayerState.paused;
 
+  @computed
   bool get isStopped => player == PlayerState.stopped;
 
 
@@ -128,6 +132,16 @@ abstract class _MusicStore with Store {
     final t = prevSong;
     if (t != null) {
       await player.play(DeviceFileSource(t.data));
+    }
+  }
+
+  Future setMute(bool mute) async {
+    if (mute) {
+      await player.setVolume(0.5);
+      isMuted = mute;
+    } else {
+      await player.setVolume(0);
+      isMuted = mute;
     }
   }
 

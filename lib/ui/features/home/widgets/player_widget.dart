@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 
 import '../../../../core/di/components/injection.dart';
 import '../../../../core/stores/music/music_store.dart';
@@ -70,9 +71,17 @@ class _PlayerWidgetState extends State<PlayerWidget> {
           mainAxisSize: MainAxisSize.min,
           children: [
             ControlButton(Icons.skip_previous, () => _musicStore.prev()),
-            ControlButton(Icons.play_arrow ,() =>  _musicStore.isPlaying ? null : _musicStore.play()),
-            ControlButton(Icons.pause ,() => _musicStore.isPaused ? null : _musicStore.pause()),
-            ControlButton(Icons.stop ,() => _musicStore.isStopped ? null : _musicStore.stop()),
+
+            Observer(
+              builder: (context) {
+               return _musicStore.isPaused || _musicStore.isStopped ?
+                ControlButton(Icons.play_arrow ,() => _musicStore.play())
+                    : ControlButton(Icons.pause ,() => _musicStore.pause());
+              },
+            ),
+
+
+            // ControlButton(Icons.stop ,() => _musicStore.isStopped ? null : _musicStore.stop()),
             ControlButton(Icons.skip_next, () => _musicStore.next()),
           ],
         ),

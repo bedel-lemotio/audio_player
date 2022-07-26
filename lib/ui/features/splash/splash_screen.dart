@@ -8,6 +8,8 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import '../../../constants/app_images.dart';
 import '../../../constants/font_family.dart';
+import '../../../core/di/components/injection.dart';
+import '../../../core/stores/music/music_store.dart';
 import '../home/views/home_view.dart';
 
 
@@ -21,7 +23,7 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen>  {
 
   //variables:-----------------------------------------------------------------
-
+  final MusicStore _musicStore = getIt<MusicStore>();
   //Navigation :----------------------------------------------------------------
   void navigationPage() {
     Navigator.pushAndRemoveUntil(
@@ -38,6 +40,7 @@ class _SplashScreenState extends State<SplashScreen>  {
 
   @override
   void initState() {
+    _musicStore.init();
     super.initState();
     startTime();
   }
