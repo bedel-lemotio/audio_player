@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:provider/provider.dart';
 import 'constants/app_theme.dart';
 import 'constants/strings.dart';
 import 'core/di/components/injection.dart';

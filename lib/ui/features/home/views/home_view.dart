@@ -6,7 +6,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:on_audio_query/on_audio_query.dart';
-import 'package:provider/provider.dart';
 
 import '../../../../constants/colors.dart';
 import '../../../../core/stores/music/music_store.dart';
