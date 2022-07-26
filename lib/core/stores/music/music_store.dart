@@ -66,6 +66,10 @@ abstract class _MusicStore with Store {
 
   int get currentIndex => _currentSongIndex;
 
+  SongModel? get currentSong => listSongs[currentIndex];
+  String? get currentSongTitle => listSongs[currentIndex].title;
+  String? get currentSongArtist => listSongs[currentIndex].artist;
+
 
   bool get isPlaying => player == PlayerState.playing;
 

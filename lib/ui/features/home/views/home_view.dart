@@ -12,9 +12,7 @@ import '../../../../constants/colors.dart';
 import '../../../../core/stores/music/music_store.dart';
 import 'now_playing.dart';
 
-
 class HomeView extends StatefulWidget {
-
   @override
   State<StatefulWidget> createState() {
     return _HomeState();
@@ -22,11 +20,9 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeState extends State<HomeView> with TickerProviderStateMixin {
-
   final List<MaterialColor> _colors = Colors.primaries;
 
   final MusicStore _musicStore = getIt<MusicStore>();
-
 
   @override
   void initState() {
@@ -39,22 +35,28 @@ class _HomeState extends State<HomeView> with TickerProviderStateMixin {
     return Scaffold(
       backgroundColor: AppColors.appThemeColor,
       appBar: AppBar(
-        title: Text("Music Player"),
+        title: Text("LBMusic Player"),
         actions: <Widget>[
           Container(
             padding: const EdgeInsets.all(20.0),
             child: Center(
               child: InkWell(
                   child: Text("Now Playing"),
-                  onTap: () =>
+                  onTap: () {
+                    if (_musicStore.listSongs != null &&
+                        _musicStore.listSongs.isNotEmpty) {
                       goToNowPlaying(
-                        _musicStore.listSongs[
-                        _musicStore.currentIndex < 0
+                        _musicStore.listSongs[_musicStore.currentIndex < 0
                             ? 0
-                            : _musicStore.currentIndex
-                        ],
+                            : _musicStore.currentIndex],
                         nowPlayTap: true,
-                      )),
+                      );
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text("No song load"),
+                      ));
+                    }
+                  }),
             ),
           )
         ],
@@ -62,7 +64,8 @@ class _HomeState extends State<HomeView> with TickerProviderStateMixin {
       body: Center(
         child: Observer(
           builder: (context) {
-            if (_musicStore.listSongs != null && _musicStore.listSongs.isNotEmpty) {
+            if (_musicStore.listSongs != null &&
+                _musicStore.listSongs.isNotEmpty) {
               return Scrollbar(
                 child: ListView.builder(
                   itemCount: _musicStore.listSongs.length,
@@ -94,15 +97,11 @@ class _HomeState extends State<HomeView> with TickerProviderStateMixin {
                             },
                             artworkRepeat: ImageRepeat.noRepeat,
                             artworkFit: BoxFit.cover,
-                          )
-                      ),
+                          )),
                       title: Text(song.title),
                       subtitle: Text(
-                        "${song.artist ?? '<Unknown>' }",
-                        style: Theme
-                            .of(context)
-                            .textTheme
-                            .caption,
+                        "${song.artist ?? '<Unknown>'}",
+                        style: Theme.of(context).textTheme.caption,
                       ),
                       minLeadingWidth: 60,
                       onTap: () {
@@ -126,7 +125,8 @@ class _HomeState extends State<HomeView> with TickerProviderStateMixin {
               );
             }
 
-            if (_musicStore.listSongs != null && _musicStore.listSongs.isEmpty) {
+            if (_musicStore.listSongs != null &&
+                _musicStore.listSongs.isEmpty) {
               return Center(
                 child: const Text("Nothing found!"),
               );
@@ -142,39 +142,35 @@ class _HomeState extends State<HomeView> with TickerProviderStateMixin {
             );
           },
         ),
-
       ),
-
       floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.shuffle), onPressed: () {
-          if (_musicStore.listSongs != null && _musicStore.listSongs.isNotEmpty) {
-            shuffleSongs();
-          } else {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text("No song load"),
-            ));
-          }
-
-      }),
+          child: Icon(Icons.shuffle),
+          onPressed: () {
+            if (_musicStore.listSongs != null &&
+                _musicStore.listSongs.isNotEmpty) {
+              shuffleSongs();
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text("No song load"),
+              ));
+            }
+          }),
     );
   }
 
   //Goto Now Playing Page
   void goToNowPlaying(SongModel song, {bool nowPlayTap: false}) {
-    Navigator.push(context,
-        MaterialPageRoute(builder: (context) =>
-            NowPlaying(song,
-              nowPlayTap: nowPlayTap,
-            )
-        )
-    );
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => NowPlaying(
+                  song,
+                  nowPlayTap: nowPlayTap,
+                )));
   }
 
   //Shuffle Songs and goto now playing page
   void shuffleSongs() {
     goToNowPlaying(_musicStore.randomSong!);
   }
-
 }
-
-

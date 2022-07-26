@@ -15,48 +15,33 @@ class AppAudioPlayer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final ThemeStore _themeStore = getIt<ThemeStore>();
-    final MusicStore _musicStore = getIt<MusicStore>();
-
     final platform = Theme.of(context).platform;
 
     if (platform == TargetPlatform.android) {
-      return MultiProvider(
-        providers: [
-          Provider<ThemeStore>(create: (_) => _themeStore),
-          Provider<MusicStore>(create: (_) => _musicStore),
-        ],
-        child: Observer(
-          builder: (context) {
-            SystemChrome.setPreferredOrientations([
-              DeviceOrientation.portraitUp,
-              DeviceOrientation.portraitDown,
-            ]);
-            return MaterialApp(
-              title: Strings.appName,
-              debugShowCheckedModeBanner: false,
-              navigatorObservers: [],
-              theme: AppThemes.themeDataDark,
-              onGenerateRoute: RouteGenerator.generateRoute,
-              home:  SplashScreen(),
-            );
-          },
-        ),
+      return Observer(
+        builder: (context) {
+          SystemChrome.setPreferredOrientations([
+            DeviceOrientation.portraitUp,
+            DeviceOrientation.portraitDown,
+          ]);
+          return MaterialApp(
+            title: Strings.appName,
+            debugShowCheckedModeBanner: false,
+            navigatorObservers: [],
+            theme: AppThemes.themeDataDark,
+            onGenerateRoute: RouteGenerator.generateRoute,
+            home:  SplashScreen(),
+          );
+        },
       );
     } else if (platform == TargetPlatform.iOS) {
-      return MultiProvider(
-        providers: [
-          Provider<ThemeStore>(create: (_) => _themeStore),
-          Provider<MusicStore>(create: (_) => _musicStore),
-        ],
-        child: MaterialApp(
-          title: Strings.appName,
-          debugShowCheckedModeBanner: false,
-          navigatorObservers: [],
-          theme:AppThemes.themeDataDark,
-          onGenerateRoute: RouteGenerator.generateRoute,
-          home: SplashScreen(),
-        ),
+      return MaterialApp(
+        title: Strings.appName,
+        debugShowCheckedModeBanner: false,
+        navigatorObservers: [],
+        theme:AppThemes.themeDataDark,
+        onGenerateRoute: RouteGenerator.generateRoute,
+        home: SplashScreen(),
       );
     } else
       throw UnsupportedError('Only Android and iOS are supported.');
