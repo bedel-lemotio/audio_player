@@ -1,7 +1,11 @@
 import 'dart:async';
+import 'package:audio_player/constants/strings.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:on_audio_query/on_audio_query.dart';
+import '../../../../core/di/components/injection.dart';
+import '../../../../core/stores/music/music_store.dart';
 import '../../../shared/widgets/mp_album_ui.dart';
 import '../../../shared/widgets/mp_blur_filter.dart';
 import '../../../shared/widgets/mp_blur_widget.dart';
@@ -19,7 +23,7 @@ class NowPlaying extends StatefulWidget {
 
 class _NowPlayingState extends State<NowPlaying> {
 
-  
+  final MusicStore _musicStore = getIt<MusicStore>();
 
   bool isMuted = false;
 
@@ -48,16 +52,26 @@ class _NowPlayingState extends State<NowPlaying> {
         child: Column(mainAxisSize: MainAxisSize.min, children: [
           Column(
             children: <Widget>[
-              Text(
-                widget.song.title,
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.headline5,
+              Observer(
+                builder: (context) {
+                  return Text(
+                    _musicStore.currentSongTitle?? Strings.unknownMessage,
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.headline5,
+                  );
+                },
               ),
-              Text(
-                widget.song.artist!,
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.caption,
+              Observer(
+                builder: (context) {
+                  return Text(
+                    _musicStore.currentSongTitle?? Strings.unknownMessage,
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.caption,
+                  );
+                },
               ),
+
+
               Padding(
                 padding: const EdgeInsets.only(bottom: 20.0),
               )
@@ -98,7 +112,7 @@ class _NowPlayingState extends State<NowPlaying> {
         child: Stack(
           fit: StackFit.expand,
           children: <Widget>[
-            blurWidget(widget.song),
+            blurWidget(widget.song,_musicStore),
             blurFilter(),
             Column(
                 mainAxisAlignment: MainAxisAlignment.center,
