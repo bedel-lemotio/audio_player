@@ -74,9 +74,11 @@ class _PlayerWidgetState extends State<PlayerWidget> {
 
             Observer(
               builder: (context) {
-               return _musicStore.isPaused || _musicStore.isStopped ?
-                ControlButton(Icons.play_arrow ,() => _musicStore.play())
-                    : ControlButton(Icons.pause ,() => _musicStore.pause());
+                if (_musicStore.statutPlayer) {
+                  return ControlButton(Icons.play_arrow ,() => _musicStore.play());
+                }
+                return ControlButton(Icons.pause ,() => _musicStore.pause());
+
               },
             ),
 
@@ -120,14 +122,13 @@ class _PlayerWidgetState extends State<PlayerWidget> {
     );
 
     _playerCompleteSubscription = _musicStore.player.onPlayerComplete.listen((event) {
-      _musicStore.player.stop();
+      _musicStore.stop();
       setState(() {
         _position = _duration;
       });
     });
 
-    _playerStateChangeSubscription =
-        _musicStore.player.onPlayerStateChanged.listen((state) {
+    _playerStateChangeSubscription = _musicStore.player.onPlayerStateChanged.listen((state) {
       setState(() {
         _audioPlayerState = state;
       });

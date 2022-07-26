@@ -133,6 +133,22 @@ mixin _$MusicStore on _MusicStore, Store {
     });
   }
 
+  late final _$statutPlayerAtom =
+      Atom(name: '_MusicStore.statutPlayer', context: context);
+
+  @override
+  bool get statutPlayer {
+    _$statutPlayerAtom.reportRead();
+    return super.statutPlayer;
+  }
+
+  @override
+  set statutPlayer(bool value) {
+    _$statutPlayerAtom.reportWrite(value, super.statutPlayer, () {
+      super.statutPlayer = value;
+    });
+  }
+
   late final _$_MusicStoreActionController =
       ActionController(name: '_MusicStore', context: context);
 
@@ -152,6 +168,7 @@ mixin _$MusicStore on _MusicStore, Store {
     return '''
 isMuted: ${isMuted},
 listSongs: ${listSongs},
+statutPlayer: ${statutPlayer},
 hasPermission: ${hasPermission},
 hasError: ${hasError},
 length: ${length},

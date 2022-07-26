@@ -81,6 +81,9 @@ abstract class _MusicStore with Store {
   @computed
   bool get isStopped => player == PlayerState.stopped;
 
+  @observable
+  bool statutPlayer = false;
+
 
 
   SongModel? get nextSong {
@@ -110,14 +113,17 @@ abstract class _MusicStore with Store {
 
   Future<void> play() async {
     await player.resume();
+    statutPlayer = false;
   }
 
   Future<void> pause() async {
     await player.pause();
+    statutPlayer = true;
   }
 
   Future<void> stop() async {
     await player.stop();
+    statutPlayer = true;
   }
 
   Future next() async {
